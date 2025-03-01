@@ -6,7 +6,6 @@ import (
 	"errors"
 	"io"
 	"net/http"
-	"time"
 
 	"github.com/jeselnik/grobble"
 )
@@ -37,7 +36,7 @@ func (s *ListenBrainz) Scrobble(t grobble.Track) error {
 	listen := listenBrainzListen{
 		ListenType: "single",
 		Payload: []trackPayload{
-			{ListenedAt: int(time.Now().Unix()),
+			{ListenedAt: t.Timestamp,
 				TrackMetadata: trackMetadata{
 					ArtistName:  t.Artist,
 					TrackName:   t.Title,

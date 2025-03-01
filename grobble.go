@@ -1,7 +1,8 @@
 package grobble
 
 type Track struct {
-	Artist, Album, Title, Timestamp string
+	Timestamp            int
+	Artist, Album, Title string
 }
 
 type Service interface {
