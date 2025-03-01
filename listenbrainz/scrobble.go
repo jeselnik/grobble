@@ -34,7 +34,7 @@ type listenBrainzListen struct {
 
 func (s *ListenBrainz) Scrobble(t grobble.Track) error {
 	listen := listenBrainzListen{
-		ListenType: "single",
+		ListenType: "import",
 		Payload: []trackPayload{
 			{ListenedAt: t.Timestamp,
 				TrackMetadata: trackMetadata{
