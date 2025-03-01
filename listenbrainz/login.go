@@ -17,11 +17,11 @@ type validateTokenResponse struct {
 func (s *ListenBrainz) Login() error {
 	client := &http.Client{}
 
-	req, err := http.NewRequest("GET", s.BaseURL+"validate-token", nil)
+	req, err := http.NewRequest("GET", s.baseURL+"validate-token", nil)
 	if err != nil {
 		return err
 	}
-	req.Header.Set("Authorization", "Token "+s.Token)
+	req.Header.Set("Authorization", "Token "+s.token)
 
 	res, err := client.Do(req)
 	if err != nil {

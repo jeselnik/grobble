@@ -70,11 +70,11 @@ func (s *ListenBrainz) BatchScrobble(tracks []grobble.Track) ([]grobble.Track, [
 	}
 
 	client := &http.Client{}
-	req, err := http.NewRequest("POST", s.BaseURL+"submit-listens", bytes.NewBuffer(jListen))
+	req, err := http.NewRequest("POST", s.baseURL+"submit-listens", bytes.NewBuffer(jListen))
 	if err != nil {
 		return emptyTrackSlice, tracks, err
 	}
-	req.Header.Set("Authorization", "Token "+s.Token)
+	req.Header.Set("Authorization", "Token "+s.token)
 	req.Header.Set("Content-Type", "application/json")
 
 	res, err := client.Do(req)

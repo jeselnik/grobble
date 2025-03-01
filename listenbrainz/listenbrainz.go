@@ -4,16 +4,20 @@ const (
 	baseURL = "https://api.listenbrainz.org/1/"
 )
 
-type ListenBrainz struct {
+type Params struct {
 	Token, BaseURL string
 }
 
-func New(l ListenBrainz) *ListenBrainz {
+type ListenBrainz struct {
+	token, baseURL string
+}
+
+func New(p Params) *ListenBrainz {
 	baseURL := baseURL
-	if l.BaseURL != "" {
-		baseURL = l.BaseURL
+	if p.BaseURL != "" {
+		baseURL = p.BaseURL
 	}
-	return &ListenBrainz{Token: l.Token, BaseURL: baseURL}
+	return &ListenBrainz{token: p.Token, baseURL: baseURL}
 }
 
 func (s *ListenBrainz) GetServiceName() string {

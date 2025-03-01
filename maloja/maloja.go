@@ -9,15 +9,19 @@ const (
 	listenBrainzAPI = "/apis/listenbrainz/1/"
 )
 
-type Maloja struct {
+type Params struct {
 	InstanceURL, APIKey string
-	listenBrainz        *listenbrainz.ListenBrainz
 }
 
-func New(m Maloja) *Maloja {
-	baseURL := m.InstanceURL + listenBrainzAPI
-	lb := listenbrainz.New(listenbrainz.ListenBrainz{Token: m.APIKey, BaseURL: baseURL})
-	return &Maloja{InstanceURL: m.InstanceURL, APIKey: m.APIKey, listenBrainz: lb}
+type Maloja struct {
+	instanceURL  string
+	listenBrainz *listenbrainz.ListenBrainz
+}
+
+func New(p Params) *Maloja {
+	baseURL := p.InstanceURL + listenBrainzAPI
+	lb := listenbrainz.New(listenbrainz.Params{Token: p.APIKey, BaseURL: baseURL})
+	return &Maloja{instanceURL: p.InstanceURL, listenBrainz: lb}
 }
 
 func (m *Maloja) Login() error {
@@ -25,7 +29,7 @@ func (m *Maloja) Login() error {
 }
 
 func (m *Maloja) GetServiceName() string {
-	return "Maloja server at " + m.listenBrainz.BaseURL
+	return "Maloja server at " + m.instanceURL
 }
 
 func (m *Maloja) Scrobble(t grobble.Track) error {
