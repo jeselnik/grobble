@@ -10,4 +10,4 @@ set of methods to allow for easy cross-service [scrobbling](https://www.collinsd
 | last.fm | 📝 |
 | libre.fm / GNU FM | 📝 |
 | ListenBrainz | ✅  |
-| Maloja | ✅  |
+| [Maloja](https://github.com/krateng/maloja) | ✅  |
