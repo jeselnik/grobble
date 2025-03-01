@@ -14,11 +14,6 @@ type validateTokenResponse struct {
 	UserName string `json:"user_name"`
 }
 
-func (s *ListenBrainz) Auth() error {
-	/* User token authentication, no authentication procedure */
-	return nil
-}
-
 func (s *ListenBrainz) Login() error {
 	client := &http.Client{}
 

@@ -6,7 +6,6 @@ type Track struct {
 }
 
 type Service interface {
-	Auth() error
 	Login() error
 	Scrobble(Track) error
 	BatchScrobble([]Track) (int, int)
