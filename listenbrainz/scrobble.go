@@ -33,55 +33,70 @@ type listenBrainzListen struct {
 }
 
 func (s *ListenBrainz) Scrobble(t grobble.Track) error {
+	tr := []grobble.Track{}
+	tr = append(tr, t)
+	_, _, scr := s.BatchScrobble(tr)
+	return scr
+}
+
+func (s *ListenBrainz) BatchScrobble(tracks []grobble.Track) ([]grobble.Track, []grobble.Track, error) {
+	emptyTrackSlice := []grobble.Track{}
+
+	p := []trackPayload{}
+
+	for _, t := range tracks {
+		p = append(p, trackPayload{
+			ListenedAt: t.Timestamp,
+			TrackMetadata: trackMetadata{
+				ArtistName:  t.Artist,
+				TrackName:   t.Title,
+				ReleaseName: t.Album,
+			},
+		})
+	}
+
 	listen := listenBrainzListen{
 		ListenType: "import",
-		Payload: []trackPayload{
-			{ListenedAt: t.Timestamp,
-				TrackMetadata: trackMetadata{
-					ArtistName:  t.Artist,
-					TrackName:   t.Title,
-					ReleaseName: t.Album,
-				}},
-		},
+		Payload:    p,
 	}
 
 	jListen, err := json.Marshal(listen)
 	if err != nil {
-		return err
+		return emptyTrackSlice, tracks, err
 	}
 
 	client := &http.Client{}
 	req, err := http.NewRequest("POST", s.BaseURL+"submit-listens", bytes.NewBuffer(jListen))
 	if err != nil {
-		return err
+		return emptyTrackSlice, tracks, err
 	}
 	req.Header.Set("Authorization", "Token "+s.Token)
 	req.Header.Set("Content-Type", "application/json")
 
 	res, err := client.Do(req)
 	if err != nil {
-		return err
+		return emptyTrackSlice, tracks, err
 	}
 	defer res.Body.Close()
 
 	resData, err := io.ReadAll(res.Body)
 	if err != nil {
-		return err
+		return emptyTrackSlice, tracks, err
 	}
 
 	resBody := listenResponse{}
 	err = json.Unmarshal(resData, &resBody)
 	if err != nil {
-		return err
+		return emptyTrackSlice, tracks, err
 	}
 
 	if resBody.Status != "ok" {
-		return errors.New("failed to scrobble with error: " + resBody.Error)
+		return emptyTrackSlice, tracks, errors.New("failed to scrobble with error: " + resBody.Error)
 	}
 
-	return nil
+	return tracks, emptyTrackSlice, nil
 }
 
-func (s *ListenBrainz) BatchScrobble([]grobble.Track) (int, int) {
-	return 0, 0
+func (s *ListenBrainz) CapabilityBatchScrobble() bool {
+	return true
 }

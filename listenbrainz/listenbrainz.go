@@ -16,10 +16,6 @@ func New(l ListenBrainz) *ListenBrainz {
 	return &ListenBrainz{Token: l.Token, BaseURL: baseURL}
 }
 
-func (s *ListenBrainz) CapabilityBatchScrobble() bool {
-	return false
-}
-
 func (s *ListenBrainz) GetServiceName() string {
 	return "ListenBrainz"
 }
