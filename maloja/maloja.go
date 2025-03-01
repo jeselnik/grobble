@@ -1,6 +1,8 @@
 package maloja
 
 import (
+	"errors"
+
 	"github.com/jeselnik/grobble"
 	"github.com/jeselnik/grobble/listenbrainz"
 )
@@ -14,14 +16,29 @@ type Params struct {
 }
 
 type Maloja struct {
-	instanceURL  string
-	listenBrainz *listenbrainz.ListenBrainz
+	instanceURL, apiKey string
+	listenBrainz        *listenbrainz.ListenBrainz
 }
 
-func New(p Params) *Maloja {
+func New(p Params) (*Maloja, error) {
+	malojaInstance := &Maloja{}
+
+	if p.InstanceURL == "" {
+		return malojaInstance, errors.New("an instance URL must be set")
+	}
+
+	if p.APIKey == "" {
+		return malojaInstance, errors.New("an API key must be set")
+	}
+
 	baseURL := p.InstanceURL + listenBrainzAPI
+
 	lb := listenbrainz.New(listenbrainz.Params{Token: p.APIKey, BaseURL: baseURL})
-	return &Maloja{instanceURL: p.InstanceURL, listenBrainz: lb}
+	malojaInstance.listenBrainz = lb
+
+	malojaInstance.instanceURL = p.InstanceURL
+	malojaInstance.apiKey = p.APIKey
+	return malojaInstance, nil
 }
 
 func (m *Maloja) Login() error {
