@@ -42,6 +42,10 @@ func (s *ListenBrainz) Scrobble(t grobble.Track) error {
 func (s *ListenBrainz) BatchScrobble(tracks []grobble.Track) ([]grobble.Track, []grobble.Track, error) {
 	emptyTrackSlice := []grobble.Track{}
 
+	if len(tracks) > grobble.BATCH_SCROBBLE_MAX {
+		return emptyTrackSlice, tracks, errors.New("length of track slice is _, greater than the max of 50")
+	}
+
 	p := []trackPayload{}
 
 	for _, t := range tracks {
